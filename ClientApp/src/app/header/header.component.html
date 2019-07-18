@@ -1,0 +1,65 @@
+<div class="logobak">
+    <div class="content-wrapper">
+      <p style="float: left;"><IMG alt="Contact Us"  style="height:110px;" src="/assets/images/logo.png"></p>
+    </div>
+  
+      <div class="container"> 
+          <div class="row">
+              <ul id="menu"  class="nav nav-tabs">
+              <li class="nav-item"><a (click)="setActive('home')" class="{{getActive('home')}}" routerLink="/">Home</a></li>
+              <li class="nav-item"><a (click)="setActive('picture')" class="{{getActive('picture')}}" routerLink="/picture">View Photos</a></li>
+              <li class="nav-item"><a (click)="setActive('person')" class="{{getActive('person')}}" routerLink="/person">Edit People</a></li>
+              <li class="nav-item"><a (click)="setActive('event')" class="{{getActive('event')}}" routerLink="/event">Edit Events</a></li>
+              <li class="nav-item"><a (click)="setActive('email')" class="{{getActive('email')}}" routerLink="/email">Edit Email</a></li>
+              <li class="nav-item"><a (click)="openLogin(LoginPop);" class="{{getActive('login')}}" href='#'   >Login</a></li>
+              <li class="nav-item"><a (click)="Logout();" class="{{getActive('logout')}}" href='#'>LogOut</a></li>
+              <li class="nav-item"><a (click)="checkAuth();" class="{{getActive('test')}}" href='#'>Test</a></li>
+              </ul>
+          </div>
+          <div class="row">
+            <div class="text-warning" *ngIf="message">{{message}}</div>
+          </div>
+      </div>
+  </div>
+  
+  <div class="modal" id="myModal" [style.display]="showModal ? 'block' : 'none'">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Log In:</h4>
+          <button type="button" class="close" data-dismiss="modal" (click) = "hide()">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+            <form id="edit-book-form" action="/SSSCal/Person/HandlePopForm" class="container-fluid"> 
+              <div class="row"> 
+                      <div class="col-xs-6 col-sm-4">
+                          <label class="label2" for="txtUserName">User Name</label>
+                      </div>
+                      <div class="col-xs-6 col-lg-8">
+                              <input class="form-control" type="text" name="txtUserName" id="txtUserName" [(ngModel)]="loginPerson.name" /> 
+                      </div>
+              </div>  
+              <div class="row"> 
+                      <div class="col-xs-6 col-sm-4" >
+                              <label  class="label2" for="password">Password</label>
+                      </div>
+                      <div class="col-xs-6 col-lg-8" >
+                              <input class="form-control" type="password" name="password" id="password"  [(ngModel)]="loginPerson.pager"/> 
+                      </div>
+              </div>  
+          </form> 
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" data-dismiss="modal" (click) = "Login()">Login</button>
+          <button type="button" class="btn btn-outline-dark" data-dismiss="modal" (click) = "hide()">Close</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>

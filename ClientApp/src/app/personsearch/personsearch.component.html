@@ -1,0 +1,163 @@
+<div class="text-danger" *ngIf="message">{{message}}</div>
+<div >{{closeResult}}</div>
+<!-- Added  role="button" so finger pointer shows
+    [disabled]=bool is Angular 2+
+-->
+<button type="button" role="button" class="btn btn-outline-dark" [disabled]="!isLoggedIn" (click)="openPerson(EditPersonPop,null);">Create Person</button>
+<table class="table table-responsive table-striped table-hover table-condensed">
+    <thead>
+        <tr>
+            <th  style="cursor: pointer">Name
+            </th>
+            <th  style="cursor: pointer">Birth Date
+            </th>
+            <th  style="cursor: pointer">Home Phone
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+<tr *ngFor="let aw of pagedItems">
+    <td>{{aw.name}}</td>
+    <td>{{aw.events!=null && aw.events[0]!=null ? (aw.events[0].Date  | date) : "N/A"}}</td>
+    <td>{{aw['homePhone']!=null? aw['homePhone'] : "N/A"}}</td>
+    <td><button role="button" (click)="openPerson(EditPersonPop, this.aw)" class="btn btn-primary btn-sm">Edit</button></td>
+  </tr>
+  <tr >
+    <td colspan="4" style="text-align:right">
+        <button role="button" ng-disabled="currentPage == 0" (click)="currentPage=currentPage-1; setPage();">
+            Previous
+        </button>
+        {{currentPage+1}}/{{numberOfPages}}
+        <button role="button" ng-disabled="currentPage >= numberOfPages - 1" (click)="currentPage=currentPage+1; setPage();">
+            Next
+      </button>
+    </td>
+  </tr>
+</table>
+
+
+<div class="modal" id="myModal" [style.display]="showModal ? 'block' : 'none'">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Person:</h4>
+                <button type="button" class="close" data-dismiss="modal" (click) = "hide()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-book-form" action="/SSSCal/Person/HandlePopForm" class="container-fluid"> 
+                <div class="row"> 
+                        <div class="col-xs-6 col-sm-4">
+                            <label class="label2" for="Name">Name</label>
+                        </div>
+                        <div class="col-xs-6 col-lg-8">
+                                <input class="form-control" type="text" name="Name" id="Name" [(ngModel)]="selectedPerson.name" /> 
+                        </div>
+                    <input type="hidden" id="id" name="id" /> 
+                    <input type="hidden" id="Address_ID" name="Address_ID" /> 
+                </div>  
+                <div class="row"> 
+                        <div class="col-xs-6 col-sm-4" >
+                                <label  class="label2" for="Home_Phone">Home_Phone</label>
+                        </div>
+                        <div class="col-xs-6 col-lg-8" >
+                                <input class="form-control" type="text" name="Home_Phone" id="Home_Phone"  [(ngModel)]="selectedPerson['homePhone']" /> 
+                        </div>
+                </div>  
+                <div class="row" > 
+                    <div class="col-xs-6 col-sm-4" >
+                        <label  class="label2" for="E_Mail">Email Adress</label>
+                    </div>
+                    <div class="col-xs-6 col-lg-8" >
+                        <input class="form-control" type="text" name="E_Mail" id="E_Mail"  [(ngModel)]="selectedPerson['eMail']" /> 
+                    </div>
+                </div>  
+                <div class="row"> 
+                    <div class="col-xs-6 col-sm-4" >
+                            <label class="label2" for="type">Date of Birth</label>
+                    </div>
+                    <div class="col-xs-6 col-lg-8" >
+                        <input class="form-control" type="date" name="DOB" id="DOB" [(ngModel)]="selectedPerson.events==null?'n/a':selectedPerson.events[0].date" /> 
+                    </div>
+                </div>  
+                <div class="row"> 
+                    <div class="col-xs-6 col-sm-4" >
+                        <label class="label2" for="Mobile">Mobile</label>
+                    </div>
+                    <div class="col-xs-6 col-lg-8" >
+                        <input class="form-control" type="text" name="Mobile" id="Mobile" [(ngModel)]="selectedPerson.mobile" /> 
+                    </div>  
+                </div>  
+                <div class="row"> 
+                    <div class="col-xs-6 col-sm-4" >
+                        <label class="label2" for="Work">Work</label>
+                    </div>
+                    <div class="col-xs-6 col-lg-8" >
+                        <input class="form-control" type="text" name="Work" id="Work" [(ngModel)]="selectedPerson.work" /> 
+                    </div>  
+                </div>  
+                <div class="row"> 
+                    <div class="col-xs-6 col-sm-4" >
+                        <label class="label2" for="Pager">Pager</label>
+                    </div>
+                    <div class="col-xs-6 col-lg-8" >
+                        <input class="form-control" type="text" name="Pager" id="Pager" [(ngModel)]="selectedPerson.pager" /> 
+                    </div>  
+                </div>  
+                <div class="row"> 
+                        <hr />
+                </div>  
+
+                                
+                <div class="row"> 
+                    <div class="col-xs-6 col-sm-4" >
+                    </div>
+                    <div class="col-xs-6 col-lg-8" >
+                            <select class="form-control" id="cboAddress" name="cboAddress" [(ngModel)]="selectedAddress" (ngModelChange)="onChange($event)" >
+                                    <option *ngFor="let c of AddressList" [ngValue]="c" > {{c.Address}} </option>
+                                </select>                            
+                        </div> 
+                </div> 
+                    
+                <div class="row"> 
+                    <div class="col-xs-6 col-sm-4" >
+                        <label class="label2" for="Address1">Address:</label>
+                    </div>
+                    <div class="col-xs-6 col-lg-8" >
+                        <input class="form-control" type="text" name="Address1" id="Address1" [(ngModel)]="selectedAddress.address1" /> 
+                    </div> 
+                </div> 
+
+                <div class="row"> 
+                    <div class="col-xs-6 col-sm-4" >
+                        <label class="label2" for="City">City:</label>
+                    </div>
+                    <div class="col-xs-6 col-lg-8" >
+                        <input class="form-control" type="text" name="City" id="City" [(ngModel)]="selectedAddress.city" /> 
+                    </div> 
+                </div> 
+                <div class="row"> 
+                    <div class="col-xs-6 col-sm-4" >
+                        <label class="label2" for="title">State:</label>
+                    </div>
+                    <div class="col-xs-6 col-lg-8" >
+                        <input class="form-control" type="text" name="State" id="State" [(ngModel)]="selectedAddress.state" /> 
+                    </div> 
+                </div> 
+                <div class="row"> 
+                    <div class="col-xs-6 col-sm-4" >
+                        <label class="label2" for="title">Zip:</label>
+                    </div>
+                    <div class="col-xs-6 col-lg-8" >
+                        <input class="form-control" type="text" name="Zip" id="Zip" [(ngModel)]="selectedAddress.zip" /> 
+                    </div> 
+                </div> 
+            </form> 
+            </div>
+            <div class="modal-footer">
+                <button role="button" type="button" class="btn btn-outline-dark" (click)="Save()" *ngIf="isLoggedIn">Save</button>
+                <button role="button" type="button" class="btn btn-outline-dark" (click)="hide()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
