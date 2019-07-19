@@ -1,10 +1,21 @@
 import { Person } from './Person';
 
+export class EventsVM {
+  total:number;
+  data:Event[] = [];
+}
+
+export class Topic {
+  id:number;
+  topicTitle: string;
+};
 
 export class Event {
-    _id:number;
+    id:number;
     UserID:number;
     TopicID:number;
+    topicf:Topic;
+    userName:string;
     Topic: string;
     Category: string;
     Date: Date;

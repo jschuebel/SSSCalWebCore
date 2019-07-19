@@ -7,6 +7,7 @@ namespace SSSCalWebCore.Models
     {
       public int Id { get; set; }
         public string Name { get; set; }
+        public DateTime DateOfBirth {get;set;}
         public string HomePhone { get; set; }
         public string Work { get; set; }
         public string Pager { get; set; }

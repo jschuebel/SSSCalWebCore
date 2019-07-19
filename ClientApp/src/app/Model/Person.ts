@@ -10,6 +10,7 @@ export class Person {
     addressId:number;
     address:Address;
     name: string;
+    dateOfBirth:Date;
     homephone: string;
     eMail: string;
     mobile: string;

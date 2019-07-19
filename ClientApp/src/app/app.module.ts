@@ -16,12 +16,16 @@ import { FormsModule }   from '@angular/forms';
 import { Windowref } from './windowref.service';
 import { DataService } from './data.service';
 import { PersonsearchComponent } from './personsearch/personsearch.component';
+import { EventsearchComponent } from './eventsearch/eventsearch.component';
+import { TablecolumnfilterComponent } from './tablecolumnfilter/tablecolumnfilter.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     PictureComponent,
+    TablecolumnfilterComponent,
+    EventsearchComponent,
     PersonsearchComponent
   ],
   imports: [

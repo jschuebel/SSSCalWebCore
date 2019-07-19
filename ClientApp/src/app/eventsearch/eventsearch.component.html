@@ -43,23 +43,87 @@
           </tr>
         
         <tr *ngFor="let aw of EventDataList">
-          <td>{{aw.category}}</td>
+          <td>{{aw.topicf!=null && aw.topicf.topicTitle!=null ? aw.topicf.topicTitle:"n/a"}}</td>
           <td>{{aw.topic}}</td>
           <td>{{aw.description}}</td>
           <td>{{aw.date | date}}</td>
-          <td>{{aw.eventperson!=null && aw.eventperson[0]!=null?aw.eventperson[0].Name:"n/a"}}</td>
+          <td>{{aw.userName!=null?aw.userName:"n/a"}}</td>
           <td><button (click)="open(content, this.aw)" class="btn btn-primary btn-sm">Edit</button></td>
         </tr>
         <tr >
           <td colspan="3" style="text-align:right">
-              <button ng-disabled="currentPage == 0" (click)="currentPage=currentPage-1; setPage();">
+              <button ng-disabled="currentPage == 1" (click)="currentPage=currentPage-1; setPage();">
                   Previous
               </button>
-              {{currentPage+1}}/{{numberOfPages}}
-              <button ng-disabled="currentPage >= numberOfPages - 1" (click)="currentPage=currentPage+1; setPage();">
+              {{currentPage}}/{{numberOfPages}}
+              <button ng-disabled="currentPage >= numberOfPages" (click)="currentPage=currentPage+1; setPage();">
                   Next
             </button>
           </td>
         </tr>
     </table>
-    
+
+
+    <div class="modal" id="myModal" [style.display]="showModal ? 'block' : 'none'">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Event:</h4>
+                    <button type="button" class="close" data-dismiss="modal" (click) = "hide()">&times;</button>
+                </div>
+            <div class="modal-body">
+            <form id="edit-book-form" class="container-fluid"> 
+                <div class="row"> 
+                        <div class="col-xs-6 col-sm-4">
+                            <label class="label2" for="Name">Name</label>
+                        </div>
+                        <div class="col-xs-6 col-lg-8">
+                                <input class="form-control" type="text" name="Name" id="Name" [(ngModel)]="selectedEvent.userName" /> 
+                        </div>
+                </div>  
+      
+                  <div class="row"> 
+                      <div class="col-xs-6 col-sm-4" >Category</div>
+                      <div class="col-xs-6 col-lg-8" >
+                              <select class="form-control" id="cboCategory" name="cboCategory" [(ngModel)]="selectedCategory" >
+                                  <option *ngFor="let c of CategoryList" [ngValue]="c"> {{c}} </option>
+                              </select>                            
+                      </div> 
+                  </div> 
+                  <div class="row" > 
+                          <div class="col-xs-6 col-sm-4" >
+                              <label  class="label2" for="Date">Date</label>
+                          </div>
+                          <div class="col-xs-6 col-lg-8" >
+                              <input class="form-control" type="text" name="Date" id="Date"  [(ngModel)]="selectedEvent.date" /> 
+                          </div>
+                  </div>  
+            
+      
+                  <div class="row" > 
+                          <div class="col-xs-6 col-sm-4" >
+                              <label  class="label2" for="Topic">Topic</label>
+                          </div>
+                          <div class="col-xs-6 col-lg-8" >
+                              <input class="form-control" type="text" name="Topic" id="Topic"  [(ngModel)]="selectedEvent.topic" /> 
+                          </div>
+                      </div>  
+                  
+                <div class="row"> 
+                    <div class="col-xs-6 col-sm-4" >
+                        <label class="label2" for="Description">Description</label>
+                    </div>
+                    <div class="col-xs-6 col-lg-8" >
+                        <input class="form-control" type="text" name="Description" id="Description" [(ngModel)]="selectedEvent.description" /> 
+                    </div>  
+                </div>  
+            </form> 
+         </div>
+        <div class="modal-footer">
+            <button role="button" type="button" class="btn btn-outline-dark" (click)="Save()" *ngIf="isLoggedIn">Save</button>
+            <button role="button" type="button" class="btn btn-outline-dark" (click)="hide()">Close</button>
+        </div>
+    </div>
+</div>
+  
+</div>  

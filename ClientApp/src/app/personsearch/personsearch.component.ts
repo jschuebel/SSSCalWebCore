@@ -16,18 +16,21 @@ export class PersonsearchComponent implements OnInit {
   isBusy = true;
   isLoggedIn = false;
   message: string;
-  MasterPeopleDataList : Person[] = [];
   PeopleDataList : Person[] = [];
   AddressList : Address[] = [];
-  pagedItems: Person[] = [];
   selectedPerson: Person;
   selectedAddress: Address;
   
   sortColumn: string = 'Name';
- 
-  currentPage = 0;
+  sortDirection : string = "asc";
+  filterField:string = 'Name';
+  filterValue:string = '';
+  isFilteringRequest:boolean=false;
+  startFilterTime:number;
+
+  currentPage = 1;
   pageSize = 10;
-  numberOfPages=2;
+  numberOfPages=0;
   closeResult: string;
 
   constructor(private _dataService:DataService) { 
@@ -36,38 +39,97 @@ export class PersonsearchComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._dataService.getUsers()
+    this.getData();
+  }
+
+  getData() {
+    let filterQuery='';
+    let filterOp = 'contains'; //'gte';
+    let prevFilterValue = this.filterValue;
+
+    if (this.isFilteringRequest)
+      filterQuery=`&filter[logic]=and&filter[filters][0][field]=${this.filterField}&filter[filters][0][operator]=${filterOp}&filter[filters][0][value]=${this.filterValue}`;
+    var filterParams = `page=${this.currentPage}&pageSize=${this.pageSize}&sort[0][field]=${this.sortColumn}&sort[0][dir]=${this.sortDirection}${filterQuery}`;
+    this._dataService.getUsers(filterParams)
     .subscribe(res => {
-      this.MasterPeopleDataList = res.data;
-      console.log("peoplelist=",this.MasterPeopleDataList);
-      this.numberOfPages = Math.round(res.total / this.pageSize);
-      console.log("numberOfPages=",this.numberOfPages);
-      this.PeopleDataList=this.MasterPeopleDataList;
-      this.setPage();
+      this.PeopleDataList = res.data;
+      console.log("peoplelist=",this.PeopleDataList);
+      if (res.total>0 && res.total < this.pageSize)
+        this.numberOfPages = 1;
+      else
+        this.numberOfPages = Math.round(res.total / this.pageSize);
+      console.log("numberOfPages=",this.numberOfPages, "total returned",res.total);
+      console.log("isFilteringRequest",this.isFilteringRequest, "prevFilterValue",prevFilterValue, "filterValue",this.filterValue);
+      //if (filtered and value has changed requery)
+      if (this.isFilteringRequest)
+      {
+        if (prevFilterValue != this.filterValue)
+        {
+          this.startFilterTime=0;
+          this.isFilteringRequest=false;
+          this.filter({ col:this.filterField, val:this.filterValue});
+        }
+        this.startFilterTime=0;
+        this.isFilteringRequest=false;
+      }
+
     });
+
   }
 
   setPage() {
-    if (this.currentPage < 0) {
-      this.currentPage=0;
-      return;
+    if (this.currentPage < 1) {
+      this.currentPage=1;
     }
-    if (this.currentPage > this.numberOfPages-1) {
-      this.currentPage=this.numberOfPages-1;
-      return;
+    else {
+      if (this.currentPage > this.numberOfPages) {
+        this.currentPage=this.numberOfPages;
+      }
     }
-
-    console.log("peoplelist len=",this.PeopleDataList.length, "  currpage=", this.currentPage, "   pagesize=", this.pageSize);
-//    this.pagedItems = this.PeopleDataList.slice(this.currentPage*this.pageSize, this.currentPage*this.pageSize + this.pageSize);
-    this.pagedItems = this.PeopleDataList;
-    console.log("this.pagedItems=",this.pagedItems);
+    console.log("setPage currpage=", this.currentPage, "   pagesize=", this.pageSize);
+    this.getData();
   }
 
+
+
+
+  sort(data) {
+    console.log("sort event=",data);
+    this.sortColumn = data.col;
+    this.sortDirection = 'asc';
+    if (data.desc)
+      this.sortDirection = 'desc';
+    this.getData();
+  }
+  
+  filter(data){
+    console.log("filter event=",data, "startTime",this.startFilterTime, "isFilteringRequest",this.isFilteringRequest);
+    this.filterField = data.col;
+    this.filterValue = data.val;
+    let duration = 0;
+    if (this.startFilterTime>0)
+    {
+      duration = ((new Date()).getTime()-this.startFilterTime) / 1e4;
+      console.log("duration",duration);
+    }
+    //if startTime==0 || duration((curr-startTime)/10000 > 0.500 && isFilteringRequest==false getdata
+    if (((duration==0)||(duration > 0.300)) && this.isFilteringRequest==false)
+    {
+      console.log('----------------- filtering');
+      this.startFilterTime=((new Date()).getTime());
+      this.isFilteringRequest=true;
+      this.currentPage = 1;
+      this.getData();
+    }
+  }
+  
+  //method to hide popup
   hide()
   {
     this.showModal = false;
   }
 
+  //show popup
   openPerson(content, person) {
     console.log("open(person)=",person);
 
