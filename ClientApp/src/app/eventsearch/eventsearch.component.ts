@@ -46,8 +46,26 @@ export class EventsearchComponent implements OnInit {
 
   ngOnInit() {
 //    this.isLoggedIn = this._authService.isAuthenticated();
-    this.getData();
+    let peopleSort = 'sort[0][field]=Name&sort[0][dir]=asc';
+    this._dataService.getUsers(peopleSort)
+    .subscribe(res => {
+      var p = new Person();
+      p.id=0;
+      p.name="** Choose Person **";
+      res.data.unshift(p)
+      this.selectedPerson=p;
+      this.getData();
+
+      this.PeopleList = res.data;
+      console.log("peoplelist=",this.PeopleList);
+    },
+    err => {
+      console.log("Error from getUsers", err)
+    });
+
   }
+
+
   filter(){
     this.getData();
   }
@@ -55,22 +73,48 @@ export class EventsearchComponent implements OnInit {
   getData(){
     console.log("this.SelectedPerson",this.selectedPerson, "fromDate", this.fromDate, "toDate", this.toDate, "selectedCategory", this.selectedCategory, "Descrip", this.Descrip);
 
-    let id=0;
-    if (this.selectedPerson!=null)
-      id = this.selectedPerson.id;
+    let filterQuery='';
+    let filterOp = 'contains'; //'gte';
+    let filterIndex=0;
 
-      if (this.Descrip!=null && this.Descrip.trim().length==0) this.Descrip=null;
-      if (this.fromDate!=null && this.fromDate.trim().length==0) this.fromDate=null;
-      if (this.toDate!=null && this.toDate.trim().length==0) this.toDate=null;
+    if (this.selectedPerson!=null && this.selectedPerson.id!=0) {
+      filterQuery+=`&filter[logic]=and&filter[filters][${filterIndex}][field]=UserId&filter[filters][${filterIndex}][operator]=eq&filter[filters][${filterIndex}][value]=${this.selectedPerson.id}`;
+      filterIndex++;
+    }
+
+    if (this.Descrip!=null) {
+        if (this.Descrip.trim().length!=0) 
+        {
+          filterQuery+=`&filter[logic]=and&filter[filters][${filterIndex}][field]=Description&filter[filters][${filterIndex}][operator]=contains&filter[filters][${filterIndex}][value]=${this.Descrip}`;
+          filterIndex++;
+        }
+    }
+    if (this.fromDate!=null)
+    {
+      if (this.fromDate.trim().length!=0){
+        filterQuery+=`&filter[logic]=and&filter[filters][${filterIndex}][field]=Date&filter[filters][${filterIndex}][operator]=gte&filter[filters][${filterIndex}][value]=${this.fromDate}`;
+        filterIndex++;
+      }
+    }
+    if (this.toDate!=null) {
+      if (this.toDate.trim().length!=0) {
+        filterQuery+=`&filter[logic]=and&filter[filters][${filterIndex}][field]=Date&filter[filters][${filterIndex}][operator]=lte&filter[filters][${filterIndex}][value]=${this.toDate}`;
+        filterIndex++;
+      }
+    }
+
+    //this.selectedCategory
+    //filterQuery=`&filter[logic]=and&filter[filters][0][field]=topicf.topicTitle&filter[filters][0][operator]=contains&filter[filters][0][value]=Birthday`;
       
-      
-    var filterParams = `page=${this.currentPage}&pageSize=${this.pageSize}&sort[0][field]=${this.sortColumn}&sort[0][dir]=${this.sortDirection}`;
+    var filterParams = `page=${this.currentPage}&pageSize=${this.pageSize}&sort[0][field]=${this.sortColumn}&sort[0][dir]=${this.sortDirection}${filterQuery}`;
+
+    console.log('getData filterParams',filterParams);
 
 //    this._dataService.getEvents(id, this.fromDate, this.toDate, this.selectedCategory, this.Descrip)
     this._dataService.getEventsf(filterParams)
     .subscribe(res => {
       this.EventDataList = res.data;
-      console.log("EventDataList=",this.EventDataList);
+      console.log("EventDataList=",this.EventDataList, "Total", res.total);
 
       if (res.total>0 && res.total < this.pageSize)
         this.numberOfPages = 1;
@@ -102,11 +146,10 @@ export class EventsearchComponent implements OnInit {
 
  
    open(content, event) {
-    // console.log("open(person)=",person);
-//      if (event.Date!=null)
-//        event.Date = this.toJSONLocal(event.Date);
-    if (event.Date!=null)
-      event.Date = formatDate(event.Date, 'yyyy-MM-dd', 'en-US');
+    //console.log("open(event)=",event);
+    if (event.date!=null)
+      event.date = formatDate(event.date, 'MM-dd-yyyy', 'en-US');
+
 
     this.message = "here is the select id = " + event._id;
     this.selectedEvent=event;
@@ -144,6 +187,11 @@ export class EventsearchComponent implements OnInit {
   */
   }
  
+  onChangeName(person : Person) {
+    console.log("person=",person);
+    this.selectedPerson=person;
+    this.getData();
+  }
 
 
 }

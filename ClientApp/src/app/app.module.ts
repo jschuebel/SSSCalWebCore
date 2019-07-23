@@ -7,6 +7,7 @@ import { HeaderComponent } from './header/header.component';
 import { PictureComponent } from './picture/picture.component';
 
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './auth-interceptor';
 
 
 //needed for Modal popup  input control
@@ -15,6 +16,7 @@ import { FormsModule }   from '@angular/forms';
 
 import { Windowref } from './windowref.service';
 import { DataService } from './data.service';
+import { AuthService } from './auth.service'
 import { PersonsearchComponent } from './personsearch/personsearch.component';
 import { EventsearchComponent } from './eventsearch/eventsearch.component';
 import { TablecolumnfilterComponent } from './tablecolumnfilter/tablecolumnfilter.component';
@@ -34,7 +36,7 @@ import { TablecolumnfilterComponent } from './tablecolumnfilter/tablecolumnfilte
     HttpClientModule,
     FormsModule
   ],
-  providers: [DataService, Windowref],
+  providers: [DataService, AuthService, Windowref,{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

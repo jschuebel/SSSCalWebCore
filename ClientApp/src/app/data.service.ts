@@ -23,6 +23,42 @@ export class DataService {
  
   constructor(private _http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
 
+  login(person : Person ) {
+    var hldperson = JSON.parse(JSON.stringify(person));
+    return this._http.post<any>(`${this.baseUrl}api/auth/token`,{person:person});
+     //.map(result=>this.result=result.json().data);
+  }
+
+  //https://blog.angularindepth.com/the-new-angular-httpclient-api-9e5c85fe3361
+  //https://angular.io/guide/http  
+  loggeduser() {
+    /* Manual addition of header ****
+    let currTokenVal:string = localStorage.getItem("currToken");
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': 'Bearer ' + currTokenVal
+      })
+      };
+    return this._http.post<any>("/api/test", {}, httpOptions);
+      */
+     return this._http.post<any>(`${this.baseUrl}api/auth/loggeduser`, {});
+    
+
+    /* pre-v7.0
+    var headers = new Headers();
+    let currTokenVal:string = localStorage.getItem("currToken");
+
+    headers.append('Authorization', 'Bearer ' + currTokenVal);
+    headers.append('Content-Type', 'application/json');
+
+    return this._http2.post("/api/test",{})
+     .map(result=>this.result=result.json().data);
+    */
+    }
+
+
   getPictures()  {
     //force result to string
       return this._http.get("./Inetpub.json", {responseType: 'text'});
@@ -40,17 +76,18 @@ export class DataService {
         return this._http.get<Person>(`${this.baseUrl}api/person/${id}`);
       }
 
-      getEventsf(filterParams:string)
+  getEventsf(filterParams:string)
   {
       console.log("getEventsf filterParams=", filterParams);
-          
+
       return this._http.get<EventsVM>(`${this.baseUrl}api/event?${filterParams}`);
   }
 
   getEvents(UserID:number, fromDate: string, toDate: string, cat: string, descrip : string) {
         //Restful : "/api/events/"+ UserID
         console.log("getEvents  UserId=", UserID, "  fromDate=", fromDate, "  toDate=", toDate, "  cat=", cat, "  descrip=", descrip);
-        var rout="/api/events";
+
+        var rout=`${this.baseUrl}api/event`;
         if (UserID!==null && UserID!=0)
           rout+="?userid="+UserID;
     

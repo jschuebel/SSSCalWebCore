@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -8,6 +9,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 using SSSCalWebCore.Models;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Linq;
+using System.Text;
 
 namespace SSSCalWebCore
 {
@@ -23,9 +28,44 @@ namespace SSSCalWebCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var cfgbuilder = new ConfigurationBuilder()
+                .AddEnvironmentVariables()
+                .Build();
+   
+            var envAudConfig = cfgbuilder.GetSection("Audience").GetChildren();
+            var Secret = envAudConfig.Where(v=>v.Key=="Secret").FirstOrDefault().Value;
+   
+            var appSettings = Configuration.GetSection("AppSettings").Get<AppSettings>();
+            appSettings.Secret=Secret;
+            services.AddSingleton<AppSettings>(appSettings);
 
-            var appSettings = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettings);
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Secret));
+            var authKey = appSettings.OcelotKey;
+             var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = signingKey,
+                ValidateIssuer = true,
+                ValidIssuer = appSettings.Iss,
+                ValidateAudience = true,
+                ValidAudience = appSettings.Aud,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+                RequireExpirationTime = true,
+            };
+
+            services.AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = authKey;
+                o.DefaultChallengeScheme = authKey;
+            })
+            .AddJwtBearer(authKey, x =>
+             {
+                 x.RequireHttpsMetadata = false;
+                 x.TokenValidationParameters = tokenValidationParameters;
+             });
+
+
             //  services.AddTransient<IDataRequester<FilterDTO<IEnumerable<PersonDTO>>>, PullWebApiData<FilterDTO<IEnumerable<PersonDTO>>>>();
             //Usage: private IDataRequester<FilterDTO<IEnumerable<PersonDTO>>> dataRequester;
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -50,6 +90,7 @@ namespace SSSCalWebCore
                 app.UseHsts();
             }
 
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
