@@ -18,11 +18,11 @@ export class Event {
     userName:string;
     Topic: string;
     Category: string;
-    Date: Date;
+    date: Date;
     createdate: Date;
     repeatYearly: boolean;
     repeatMonthly: boolean;
-    Description: string;
+    description: string;
     DisplayOnly: string;
     eventperson: Person[] = [];
     Emails: number[] = [];

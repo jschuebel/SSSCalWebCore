@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FullCalendarModule } from '@fullcalendar/angular'; // for FullCalendar!
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,6 +21,7 @@ import { AuthService } from './auth.service'
 import { PersonsearchComponent } from './personsearch/personsearch.component';
 import { EventsearchComponent } from './eventsearch/eventsearch.component';
 import { TablecolumnfilterComponent } from './tablecolumnfilter/tablecolumnfilter.component';
+import { CalendarComponent } from './calendar/calendar.component';
 
 @NgModule({
   declarations: [
@@ -28,13 +30,15 @@ import { TablecolumnfilterComponent } from './tablecolumnfilter/tablecolumnfilte
     PictureComponent,
     TablecolumnfilterComponent,
     EventsearchComponent,
-    PersonsearchComponent
+    PersonsearchComponent,
+    CalendarComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    FullCalendarModule // for FullCalendar!
   ],
   providers: [DataService, AuthService, Windowref,{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent]

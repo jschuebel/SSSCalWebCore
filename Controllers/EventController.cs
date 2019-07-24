@@ -12,17 +12,40 @@ using System.Runtime.Serialization.Json;
 
 namespace SSSCalWebCore.Controllers
 {
-
+    public class FullCalendarEventDTO {
+        public string title {get; set;}
+        public DateTime? start {get; set;}
+    }
  
     [Route("api/[controller]")]
     public class EventController : Controller
     {
         private readonly AppSettings _appSettings;
 
-        public EventController(IOptions<AppSettings> appSettings)  {
-            _appSettings = appSettings.Value;
+        public EventController(AppSettings appSettings)  {
+            _appSettings = appSettings;
         }
- 
+
+
+        //FullCalendar control sends: https://localhost:5021/api/event/eventsModelLoad?start=2019-06-30T00%3A00%3A00-05%3A00&end=2019-08-11T00%3A00%3A00-05%3A00
+        [HttpGet]
+        [Route("eventsModelLoad")]
+          public async Task<IEnumerable<FullCalendarEventDTO>> EventsModelLoad([FromQuery] DateTime start,  DateTime end)
+        {
+            //var requests = this.HttpContext.Request.QueryString.Value;
+            var requests = $"?page=1&pageSize=99&sort[0][field]=Date&sort[0][dir]=asc&filter[logic]=and&filter[filters][0][field]=Date&filter[filters][0][operator]=gte&filter[filters][0][value]={start.ToShortDateString()}&filter[filters][1][field]=Date&filter[filters][1][operator]=lte&filter[filters][1][value]={end.ToShortDateString()}";
+            var result = await PullWebApiData<FilterDTO<IEnumerable<EventDTO>>>.RequestData(_appSettings.SSSWebApiUrl, "api/event", requests) ;
+
+            var transformEvent = from evt in result.data
+                                    select new FullCalendarEventDTO {
+                                        start=evt.Date,
+                                        title=evt.Description
+                                    };
+
+            return transformEvent;
+
+        }
+
         [HttpGet]
         public async Task<FilterDTO<IEnumerable<EventDTO>>> GetFiltered()
         {
