@@ -78,7 +78,8 @@ export class DataService {
 
   getEventsf(filterParams:string)
   {
-      console.log("getEventsf filterParams=", filterParams);
+    console.log("getEventsf filterParams=", filterParams);
+    console.log("getEventsf url=", `${this.baseUrl}api/event?${filterParams}`);
 
       return this._http.get<EventsVM>(`${this.baseUrl}api/event?${filterParams}`);
   }

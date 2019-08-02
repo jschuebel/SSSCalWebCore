@@ -1,4 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule }   from '@angular/forms';
 
 import { TablecolumnfilterComponent } from './tablecolumnfilter.component';
 
@@ -8,7 +10,11 @@ describe('TablecolumnfilterComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TablecolumnfilterComponent ]
+      declarations: [ TablecolumnfilterComponent ],
+      imports: [ 
+        BrowserModule,
+        FormsModule     
+      ]
     })
     .compileComponents();
   }));

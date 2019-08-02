@@ -22,6 +22,7 @@ import { PersonsearchComponent } from './personsearch/personsearch.component';
 import { EventsearchComponent } from './eventsearch/eventsearch.component';
 import { TablecolumnfilterComponent } from './tablecolumnfilter/tablecolumnfilter.component';
 import { CalendarComponent } from './calendar/calendar.component';
+import main from '@fullcalendar/core/reducers/main';
 
 @NgModule({
   declarations: [

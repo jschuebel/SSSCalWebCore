@@ -1,6 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule }   from '@angular/forms';
+import {
+  HttpClientTestingModule,
+  HttpTestingController
+} from '@angular/common/http/testing';
 
 import { CalendarComponent } from './calendar.component';
+import { FullCalendarModule } from '@fullcalendar/angular'; // for FullCalendar!
+import { DataService } from '../data.service';
+
+class MockDataService extends DataService {
+  getData() {}
+}
 
 describe('CalendarComponent', () => {
   let component: CalendarComponent;
@@ -8,7 +20,14 @@ describe('CalendarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CalendarComponent ]
+      declarations: [ CalendarComponent ],
+      imports: [ 
+        BrowserModule,
+        FormsModule,
+        FullCalendarModule,
+        HttpClientTestingModule
+      ],
+      providers: [ {provide: DataService, useClass: MockDataService} ]
     })
     .compileComponents();
   }));

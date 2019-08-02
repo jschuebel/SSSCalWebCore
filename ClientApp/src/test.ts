@@ -7,12 +7,19 @@ import {
   platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
 
-declare const require: any;
+export function getBaseUrl() {
+  return document.getElementsByTagName('base')[0].href;
+}
 
+
+declare const require: any;
+const providers = [
+  { provide: 'BASE_URL', useFactory: getBaseUrl, deps: [] }
+];
 // First, initialize the Angular testing environment.
 getTestBed().initTestEnvironment(
   BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting()
+  platformBrowserDynamicTesting(providers)
 );
 // Then we find all the tests.
 const context = require.context('./', true, /\.spec\.ts$/);
