@@ -102,6 +102,13 @@ export class PersonsearchComponent implements OnInit {
     this.getData();
   }
   
+  onChange(Address) {
+    console.log("onchange Address=",Address);
+    console.log("onchange this.selectedAddress=",this.selectedAddress);
+    this.selectedPerson.addressId=this.selectedAddress._id;
+    
+  }
+
   filter(data){
     console.log("filter event=",data, "startTime",this.startFilterTime, "isFilteringRequest",this.isFilteringRequest);
     this.filterField = data.col;
@@ -130,7 +137,7 @@ export class PersonsearchComponent implements OnInit {
   }
 
   //show popup
-  openPerson(content, person) {
+  openPerson(person) {
     console.log("open(person)=",person);
 
     this._dataService.getPerson(person.id)

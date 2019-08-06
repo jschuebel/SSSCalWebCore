@@ -16,7 +16,7 @@ export class Event {
     TopicID:number;
     topicf:Topic;
     userName:string;
-    Topic: string;
+    topic: string;
     Category: string;
     date: Date;
     createdate: Date;

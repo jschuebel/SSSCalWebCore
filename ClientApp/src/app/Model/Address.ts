@@ -1,7 +1,7 @@
 export class Address {
   _id?:number;
-  Address1: string;
-  City: string;
-  State: string;
-  Zip: string;
+  address1: string;
+  city: string;
+  state: string;
+  zip: string;
 };

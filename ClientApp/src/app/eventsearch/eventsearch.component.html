@@ -43,11 +43,11 @@
           </tr>
         
         <tr *ngFor="let aw of EventDataList">
-          <td><button (click)="open(content, this.aw)" class="btn btn-primary btn-sm">Edit</button></td>
+          <td><button (click)="open(this.aw)" class="btn btn-primary btn-sm">Edit</button></td>
           <td>{{aw.topicf!=null && aw.topicf.topicTitle!=null ? aw.topicf.topicTitle:"n/a"}}</td>
           <td>{{aw.topic}}</td>
           <td>{{aw.description!=null?aw.description:"n/a"}}</td>
-          <td>{{aw.date!=null?aw.date:"n/a"}}</td>
+          <td>{{aw.date!=null? (aw.date  | date):"n/a"}}</td>
           <td>{{aw.userName!=null?aw.userName:"n/a"}}</td>
         </tr>
         <tr >

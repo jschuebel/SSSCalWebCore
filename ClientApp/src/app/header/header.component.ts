@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit {
   {
     this.showModal = false;
   }
-  openLogin(content) {
+  openLogin() {
   // this.setActive('login');
   this.loginPerson.name = "";
   this.loginPerson.pager = "";

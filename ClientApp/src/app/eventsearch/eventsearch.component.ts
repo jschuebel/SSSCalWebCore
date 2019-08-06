@@ -145,7 +145,7 @@ export class EventsearchComponent implements OnInit {
    }
 
  
-   open(content, event) {
+   open(event) {
     //console.log("open(event)=",event);
     if (event.date!=null)
       event.date = formatDate(event.date, 'MM-dd-yyyy', 'en-US');
@@ -193,5 +193,10 @@ export class EventsearchComponent implements OnInit {
     this.getData();
   }
 
+  onChange(Category) {
+    console.log("Category=",Category);
+    this.selectedCategory=Category;
+    this.getData();
+  }
 
 }

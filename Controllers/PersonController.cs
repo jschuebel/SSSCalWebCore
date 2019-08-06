@@ -19,8 +19,11 @@ namespace SSSCalWebCore.Controllers
     {
         private readonly AppSettings _appSettings;
 
-        public PersonController(IOptions<AppSettings> appSettings)  {
-            _appSettings = appSettings.Value;
+//        public PersonController(IOptions<AppSettings> appSettings)  {
+//            _appSettings = appSettings.Value;
+//        }
+        public PersonController(AppSettings appSettings)  {
+            _appSettings = appSettings;
         }
  
         [HttpGet]

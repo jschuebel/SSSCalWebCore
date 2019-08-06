@@ -7,4 +7,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'ClientApp';
+  showSideBar = false;
+  
+  
+  onClickMe() {
+    this.showSideBar = !this.showSideBar;
+  }
 }

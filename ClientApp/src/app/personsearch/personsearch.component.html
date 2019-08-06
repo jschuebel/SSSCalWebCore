@@ -3,7 +3,7 @@
 <!-- Added  role="button" so finger pointer shows
     [disabled]=bool is Angular 2+
 -->
-<button type="button" role="button" class="btn btn-outline-dark" [disabled]="!isLoggedIn" (click)="openPerson(EditPersonPop,null);">Create Person</button>
+<button type="button" role="button" class="btn btn-outline-dark" [disabled]="!isLoggedIn" (click)="openPerson(null);">Create Person</button>
 <table class="table table-responsive table-striped table-hover table-condensed">
     <thead>
         <tr>
@@ -21,7 +21,7 @@
     </thead>
 
 <tr *ngFor="let aw of PeopleDataList">
-    <td><button role="button" (click)="openPerson(EditPersonPop, this.aw)" class="btn btn-primary btn-sm">Edit</button></td>
+    <td><button role="button" (click)="openPerson(this.aw)" class="btn btn-primary btn-sm">Edit</button></td>
     <td>{{aw.name}}</td>
     <td>{{aw.dateOfBirth!=null ? (aw.dateOfBirth  | date) : "N/A"}}</td>
     <td>{{aw['homePhone']!=null? aw['homePhone'] : "N/A"}}</td>
