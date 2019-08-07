@@ -67,20 +67,8 @@ describe('PersonsearchComponent', () => {
       data : [ new Person()]
     }));
     expect(component.getData()).not.toBeNull();
+    expect(testBedService.getUsers).toHaveBeenCalled();
     expect(component.PeopleDataList.length).toEqual(1);
   });
 
-
-/*
-  it('should getdata exist',
-  inject([DataService], (injectedDataService:DataService) => {
-    expect(component.getData()).toBeTruthy();
-  })
-);
-  
-  it('should have 1 Person in PeopleDataList', () => {
-    expect(component.getData()).not.toBeNull();
-    expect(component.PeopleDataList.length).toEqual(1);
-  });
-*/
 });
