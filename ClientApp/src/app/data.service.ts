@@ -76,6 +76,14 @@ export class DataService {
         return this._http.get<Person>(`${this.baseUrl}api/person/${id}`);
       }
 
+  savePerson(person : Person ) {
+    var hldperson = JSON.parse(JSON.stringify(person));
+    console.log("url", `${this.baseUrl}api/person/`,hldperson);
+    return this._http.put<Person>(`${this.baseUrl}api/person/${person.id}`,person);
+      //params: new HttpParams().set('id',`${person.id}`)
+      //.map(result=>this.result=result.json().data);
+  }
+
   getEventsf(filterParams:string)
   {
     console.log("getEventsf filterParams=", filterParams);

@@ -9,6 +9,7 @@ using SSSCalWebCore.Models;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Runtime.Serialization.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SSSCalWebCore.Controllers
 {
@@ -27,11 +28,11 @@ namespace SSSCalWebCore.Controllers
         }
  
         [HttpGet]
-        public async Task<FilterDTO<IEnumerable<PersonDTO>>> GetFiltered()
+        public async Task<FilterDTO<List<PersonDTO>>> GetFiltered()
         {
             var requests = this.HttpContext.Request.QueryString.Value;
  //requests = "?page=1&pageSize=20&sort[0][field]=Date&sort[0][dir]=asc&filter[logic]=and&filter[filters][0][field]=Date&filter[filters][0][operator]=gte&filter[filters][0][value]=2019-06-30";
-            return await PullWebApiData<FilterDTO<IEnumerable<PersonDTO>>>.RequestData(_appSettings.SSSWebApiUrl, "api/person", requests) ;
+            return await PullWebApiData<List<PersonDTO>>.RequestDataPaged(_appSettings.SSSWebApiUrl, "api/person", requests) ;
 
         }
 
@@ -44,5 +45,36 @@ namespace SSSCalWebCore.Controllers
             var persondto = JsonConvert.DeserializeObject<PersonDTO>(dto, settings);
 */            
         }
+
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> PutPerson(int id, [FromBody] PersonDTO person)
+        {
+
+            //Request.Headers["Authorization"] already contains "Bearer " + token
+            string authorization = Request.Headers["Authorization"]; 
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(_appSettings.SSSWebApiUrl);
+            //client.DefaultRequestHeaders.Authorization =  new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authorization);
+            client.DefaultRequestHeaders.Add("Authorization", authorization);
+
+            var output = JsonConvert.SerializeObject(person);
+            StringContent content = new StringContent(output,System.Text.Encoding.UTF8,"application/json");
+  
+            HttpResponseMessage response = await client.PutAsync("api/person/", content);
+            if (response.IsSuccessStatusCode) {
+                var dto = response.Content.ReadAsStringAsync().Result;
+            }
+           else
+            {
+                Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
+            }
+            return NoContent();
+/*            
+            HttpResponseMessage response = client.GetAsync($"api/person/{id}").Result;
+            var persondto = JsonConvert.DeserializeObject<PersonDTO>(dto, settings);
+*/            
+        }
+
     }
 }

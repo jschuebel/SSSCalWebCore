@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
+import { AuthService } from '../auth.service'
 import {formatDate } from '@angular/common';
 import { Address } from '../Model/Address';
 import { Person, PersonsVM } from '../Model/Person';
@@ -39,7 +40,9 @@ export class EventsearchComponent implements OnInit {
   fromDate: string;
   toDate: string;
 
-  constructor(private _dataService:DataService) { 
+  constructor(private _dataService:DataService, 
+              private _authService:AuthService) { 
+    this.isLoggedIn = this._authService.isAuthenticated();
     this.selectedPerson = new Person();
     this.selectedEvent = new Event();
   }
@@ -145,13 +148,13 @@ export class EventsearchComponent implements OnInit {
    }
 
  
-   open(event) {
+   open(event : Event) {
     //console.log("open(event)=",event);
-    if (event.date!=null)
-      event.date = formatDate(event.date, 'MM-dd-yyyy', 'en-US');
+    //if (event.date!=null)
+    //  event.date = new Date(formatDate(event.date, 'MM-dd-yyyy', 'en-US'));
 
 
-    this.message = "here is the select id = " + event._id;
+    this.message = "here is the select id = " + event.id;
     this.selectedEvent=event;
     this.selectedCategory=event.Category;
 

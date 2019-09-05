@@ -39,18 +39,21 @@ export class HeaderComponent implements OnInit {
   {
     this.showModal = false;
   }
-  openLogin() {
-  // this.setActive('login');
-  this.loginPerson.name = "";
-  this.loginPerson.pager = "";
-  this.showModal = true; // Show-Hide Modal Check
-
+  openLogin(event) {
+    // this.setActive('login');
+    this.loginPerson.name = "";
+    this.loginPerson.pager = "";
+    this.showModal = true; // Show-Hide Modal Check
+    event.preventDefault();
+    event.stopPropagation();
   }
 
 
-  Logout() {
+  Logout(event) {
     this._authService.removeToken();
     this.message = "";
+    event.preventDefault();
+    event.stopPropagation();
    }
 
   Login() {
@@ -74,7 +77,7 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  checkAuth() {
+  checkAuth(event) {
 
     this._dataService.loggeduser()
     .subscribe(res => {
@@ -84,9 +87,13 @@ export class HeaderComponent implements OnInit {
     },
     err => {
       console.log("Error from test", err)
-      if (err.status===403)
+      if (err.status===403 || err.status===401)
         this.message = "Test Access: " + err.statusText;
     });
+
+    event.preventDefault();
+    event.stopPropagation();
+
   }
 
 }

@@ -80,7 +80,7 @@
                             <label class="label2" for="type">Date of Birth</label>
                     </div>
                     <div class="col-xs-6 col-lg-8" >
-                        <input class="form-control" type="date" name="DOB" id="DOB" [(ngModel)]="selectedPerson.events==null?'n/a':selectedPerson.events[0].date" /> 
+                        <input class="form-control" type="date" name="DOB" id="DOB" [ngModel]="selectedPerson.dateOfBirth | date:'yyyy-MM-dd'" (ngModelChange)="selectedPerson.dateOfBirth = $event" /> 
                     </div>
                 </div>  
                 <div class="row"> 

@@ -26,7 +26,7 @@ namespace SSSCalWebCore.Controllers
             _appSettings = appSettings;
         }
 
-
+        //https://www.schuebelsoftware.com/ssscalcoreapi
         //FullCalendar control sends: https://localhost:5021/api/event/eventsModelLoad?start=2019-06-30T00%3A00%3A00-05%3A00&end=2019-08-11T00%3A00%3A00-05%3A00
         [HttpGet]
         [Route("eventsModelLoad")]
@@ -34,7 +34,7 @@ namespace SSSCalWebCore.Controllers
         {
             //var requests = this.HttpContext.Request.QueryString.Value;
             var requests = $"?page=1&pageSize=99&sort[0][field]=Date&sort[0][dir]=asc&filter[logic]=and&filter[filters][0][field]=Date&filter[filters][0][operator]=gte&filter[filters][0][value]={start.ToShortDateString()}&filter[filters][1][field]=Date&filter[filters][1][operator]=lte&filter[filters][1][value]={end.ToShortDateString()}";
-            var result = await PullWebApiData<FilterDTO<IEnumerable<EventDTO>>>.RequestData(_appSettings.SSSWebApiUrl, "api/event", requests) ;
+            var result = await PullWebApiData<List<EventDTO>>.RequestDataPaged(_appSettings.SSSWebApiUrl, "api/event", requests) ;
 
             var transformEvent = from evt in result.data
                                     select new FullCalendarEventDTO {
@@ -47,11 +47,11 @@ namespace SSSCalWebCore.Controllers
         }
 
         [HttpGet]
-        public async Task<FilterDTO<IEnumerable<EventDTO>>> GetFiltered()
+        public async Task<FilterDTO<List<EventDTO>>> GetFiltered()
         {
             var requests = this.HttpContext.Request.QueryString.Value;
  //requests = "?page=1&pageSize=20&sort[0][field]=Date&sort[0][dir]=asc&filter[logic]=and&filter[filters][0][field]=Date&filter[filters][0][operator]=gte&filter[filters][0][value]=2019-06-30";
-            return await PullWebApiData<FilterDTO<IEnumerable<EventDTO>>>.RequestData(_appSettings.SSSWebApiUrl, "api/event", requests) ;
+            return await PullWebApiData<List<EventDTO>>.RequestDataPaged(_appSettings.SSSWebApiUrl, "api/event", requests) ;
 
         }
 

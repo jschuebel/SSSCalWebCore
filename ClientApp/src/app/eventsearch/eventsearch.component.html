@@ -95,7 +95,7 @@
                               <label  class="label2" for="Date">Date</label>
                           </div>
                           <div class="col-xs-6 col-lg-8" >
-                              <input class="form-control" type="text" name="Date" id="Date"  [(ngModel)]="selectedEvent.date" /> 
+                              <input class="form-control" type="text" name="Date" id="Date"  [ngModel]="selectedEvent.date | date:'yyyy-MM-dd'" (ngModelChange)="selectedEvent.date = $event" /> 
                           </div>
                   </div>  
             

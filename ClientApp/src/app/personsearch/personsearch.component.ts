@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from '../data.service';
+import {formatDate } from '@angular/common';
 
+import { DataService } from '../data.service';
+import { AuthService } from '../auth.service'
 import { Address } from '../Model/Address';
 import { Person, PersonsVM } from '../Model/Person';
 import { Event } from '../Model/Event';
@@ -33,7 +35,9 @@ export class PersonsearchComponent implements OnInit {
   numberOfPages=0;
   closeResult: string;
 
-  constructor(private _dataService:DataService) { 
+  constructor(private _dataService:DataService, 
+               private _authService:AuthService) { 
+    this.isLoggedIn = this._authService.isAuthenticated();
     this.selectedPerson = new Person();
     this.selectedAddress = new Address();
   }
@@ -139,9 +143,14 @@ export class PersonsearchComponent implements OnInit {
   //show popup
   openPerson(person) {
     console.log("open(person)=",person);
-
+    this.isLoggedIn = this._authService.isAuthenticated();
+    
     this._dataService.getPerson(person.id)
     .subscribe(res => {
+
+      //if (res.dateOfBirth!=null)
+      //  res.dateOfBirth = formatDate(res.dateOfBirth, 'MM-dd-yyyy', 'en-US');
+
       this.selectedPerson= res;
       console.log("selectedPerson=",this.selectedPerson);
       this.selectedAddress = res.address;
@@ -157,5 +166,17 @@ export class PersonsearchComponent implements OnInit {
   Save() {
     this.showModal = false;
     console.log("Save(person)=",this.selectedPerson);
+    this._dataService.savePerson(this.selectedPerson)
+    .subscribe(res => {
+      this.message="Saved!!!";
+      console.log("savePerson=",res);
+    },
+    error  => {
+      console.log("SavePerson response error", error);
+      this.message=error.statusText;
+    });
+
+    
+
   }
 }
