@@ -1,4 +1,4 @@
-import { Component, OnInit,ElementRef, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit,ElementRef, ViewChild, HostListener, AfterViewInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { Windowref } from '../windowref.service';
 
@@ -7,7 +7,7 @@ import { Windowref } from '../windowref.service';
   templateUrl: './picture.component.html',
   styleUrls: ['./picture.component.css']
 })
-export class PictureComponent implements OnInit {
+export class PictureComponent implements OnInit, AfterViewInit {
   @ViewChild('tFolder', { static: false }) tFolderRef: ElementRef;
   @ViewChild('videoPlayer', { static: false }) videoplayer: any;
   
@@ -63,12 +63,21 @@ export class PictureComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.tFolder = this.tFolderRef.nativeElement;
-    this.MaxCols = Math.floor(this.tFolder.offsetWidth/180);
+    console.log("ngOnInit");
+  }
 
-    console.log("updateTable this.tFolder.offsetWidth", this.tFolder.offsetWidth);
-    console.log("updateTable ngOnInit", this.MaxCols);
-    this.initLoad(this._dataService);
+  ngAfterViewInit() {
+    console.log("ngAfterViewInit1");
+    setTimeout(() => {
+      console.log("ngAfterViewInit2");
+      this.tFolder = this.tFolderRef.nativeElement;
+      console.log(this.tFolder);
+      this.MaxCols = Math.floor(this.tFolder.offsetWidth / 180);
+      if (this.MaxCols === 0) this.MaxCols = 3;
+      console.log("updateTable this.tFolder.offsetWidth", this.tFolder.offsetWidth);
+      console.log("updateTable ngOnInit", this.MaxCols);
+       this.initLoad(this._dataService);
+    }, 300);
   }
 
 
@@ -167,7 +176,7 @@ export class PictureComponent implements OnInit {
 
     
   }
-
+  
   FullPic(path){
     console.log("FullPic path", path);
     var nwin = this.nativeWindow.open("./PicsPage.html");

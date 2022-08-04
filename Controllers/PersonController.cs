@@ -30,6 +30,8 @@ namespace SSSCalWebCore.Controllers
         [HttpGet]
         public async Task<FilterDTO<List<PersonDTO>>> GetFiltered()
         {
+            string authorization = Request.Headers["Authorization"];
+            var cooks = Request.Cookies;
             var requests = this.HttpContext.Request.QueryString.Value;
  //requests = "?page=1&pageSize=20&sort[0][field]=Date&sort[0][dir]=asc&filter[logic]=and&filter[filters][0][field]=Date&filter[filters][0][operator]=gte&filter[filters][0][value]=2019-06-30";
             return await PullWebApiData<List<PersonDTO>>.RequestDataPaged(_appSettings.SSSWebApiUrl, "api/person", requests) ;
@@ -37,8 +39,11 @@ namespace SSSCalWebCore.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<PersonDTO> GetById(int id)
         {
+            string authorization = Request.Headers["Authorization"];
+            var cooks = Request.Cookies;
             return await PullWebApiData<PersonDTO>.RequestData(_appSettings.SSSWebApiUrl, "api/person/", id.ToString()) ;
 /*            
             HttpResponseMessage response = client.GetAsync($"api/person/{id}").Result;

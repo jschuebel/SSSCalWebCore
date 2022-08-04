@@ -5,9 +5,13 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test",
+    "buildw": "ng build --watch",
+    "buildp": "ng build --prod --base-href='/ssscalcore/'",
+    "test": "node ./node_modules/jasmine/bin/jasmine.js && ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "testinit": "node ./node_modules/jasmine/bin/jasmine.js init",
+    "test2": "node ./node_modules/jasmine/bin/jasmine.js"
   },
   "private": true,
   "dependencies": {
